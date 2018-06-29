@@ -14,6 +14,10 @@ import com.toure.myjournal.R;
  */
 public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHolder> {
 
+    // Item types which will be used to determine which type of view to send to the user
+    final int TYPE_JOURNAL_ITEM = 1;
+    final int TYPE_JOURNAL_ITEM_WITH_HEADING = 2;
+
     public JournalAdapter(Context context) {
 
     }
@@ -22,11 +26,24 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        int layoutIdForListItem = R.layout.journal_layout_item;
+        int layoutIdForListItem;
+        if (viewType == TYPE_JOURNAL_ITEM_WITH_HEADING) {
+            layoutIdForListItem = R.layout.journal_layout_item_with_heading;
+        } else {
+            layoutIdForListItem = R.layout.journal_layout_item;
+        }
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
         View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
         return new ViewHolder(view);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        super.getItemViewType(position);
+        if (position == 0 || position == 5) {
+            return TYPE_JOURNAL_ITEM_WITH_HEADING;
+        } else return TYPE_JOURNAL_ITEM;
     }
 
     @Override
