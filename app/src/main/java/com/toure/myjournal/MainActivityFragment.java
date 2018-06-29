@@ -2,10 +2,16 @@ package com.toure.myjournal;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.toure.myjournal.adapter.JournalAdapter;
 
 
 /**
@@ -14,6 +20,12 @@ import android.view.ViewGroup;
  */
 public class MainActivityFragment extends Fragment {
 
+    public static final String LOG_TAC = MainActivityFragment.class.getSimpleName();
+
+    RecyclerView mRecyclerView;
+    JournalAdapter mJournalAdapter;
+    RecyclerView.LayoutManager mLayoutManager;
+
     public MainActivityFragment() {
         // Required empty public constructor
     }
@@ -21,13 +33,39 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mJournalAdapter = new JournalAdapter(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.journal_recyclerview);
+        int recyclerViewOrientation = LinearLayoutManager.VERTICAL;
+
+        /*
+         *  This value should be true if you want to reverse your layout. Generally, this is only
+         *  true with horizontal lists that need to support a right-to-left layout.
+         */
+        boolean shouldReverseLayout = false;
+        mLayoutManager = new LinearLayoutManager(getContext(), recyclerViewOrientation, shouldReverseLayout);
+        return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        DividerItemDecoration divider = new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(divider);
+          /*
+         * Use this setting to improve performance if you know that changes in content do not
+         * change the child layout size in the RecyclerView
+         */
+        mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.setAdapter(mJournalAdapter);
+    }
 }

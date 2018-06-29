@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
                                     .setTheme(R.style.GreenTheme)
                                     .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
                                     .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.EmailBuilder().build(),
-                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                            new AuthUI.IdpConfig.EmailBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
                 }
