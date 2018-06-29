@@ -14,14 +14,16 @@
         android:paddingLeft="50dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:background="@color/colorDaybackground" />
+        android:background="@color/colorDaybackground"
+        android:id="@+id/journal_item_month_year" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="5dp"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite"
+        android:id="@+id/journal_item_layout">
 
         <TextView
             android:layout_width="5dp"

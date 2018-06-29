@@ -1,6 +1,8 @@
 package com.toure.myjournal;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +20,7 @@ import com.toure.myjournal.adapter.JournalAdapter;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements ItemOnclickHandler {
 
     public static final String LOG_TAC = MainActivityFragment.class.getSimpleName();
 
@@ -33,7 +35,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mJournalAdapter = new JournalAdapter(getContext());
+        mJournalAdapter = new JournalAdapter(getContext(), this);
     }
 
     @Override
@@ -67,5 +69,12 @@ public class MainActivityFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         mRecyclerView.setAdapter(mJournalAdapter);
+    }
+
+    @Override
+    public void onClick() {
+        Context context = getContext();
+        Intent intentToStartDetailActivity = new Intent(context, DetailActivity.class);
+        startActivity(intentToStartDetailActivity);
     }
 }

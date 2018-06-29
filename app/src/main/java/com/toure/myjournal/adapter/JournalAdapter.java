@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.toure.myjournal.ItemOnclickHandler;
 import com.toure.myjournal.R;
 
 /**
@@ -18,8 +20,15 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
     final int TYPE_JOURNAL_ITEM = 1;
     final int TYPE_JOURNAL_ITEM_WITH_HEADING = 2;
 
-    public JournalAdapter(Context context) {
+    /*
+     * An on-click handler that we've defined to make it easy for the fragment to interface with
+     * our RecyclerView
+     */
+    final private ItemOnclickHandler mClickHandler;
 
+    public JournalAdapter(Context context, ItemOnclickHandler clickHandler) {
+
+        mClickHandler = clickHandler;
     }
 
     @NonNull
@@ -57,10 +66,18 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
         return 10;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        LinearLayout journalItem;
         public ViewHolder(View itemView) {
             super(itemView);
+            journalItem = itemView.findViewById(R.id.journal_item_layout);
+            journalItem.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mClickHandler.onClick();
         }
     }
 }
