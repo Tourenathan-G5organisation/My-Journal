@@ -3,6 +3,7 @@ package com.toure.myjournal;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -33,7 +34,7 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit, container, false);
         timeTextView = view.findViewById(R.id.time_textview);
@@ -76,10 +77,18 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
                 getTimePickerDialog();
             }
         });
+
+        setSelectedTime();
+        setSelectedDate();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_done) getActivity().finish();
+        else if (id == R.id.action_delete) {
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -113,7 +122,7 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
                 mNoteDate.set(Calendar.HOUR_OF_DAY, selectedHour);
                 mNoteDate.set(Calendar.MINUTE, selectedHour);
                 mNoteDate.set(Calendar.SECOND, 0);
-                timeTextView.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+                setSelectedTime();
 
             }
         }, currentTime.get(Calendar.HOUR_OF_DAY), currentTime.get(Calendar.MINUTE), true);
@@ -125,13 +134,16 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     void setSelectedDate() {
         dayOfWeekTextview.setText(mNoteDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()));
         dayOfMonthTextview.setText(String.valueOf(mNoteDate.get(Calendar.DAY_OF_MONTH)));
-        monthYearTextview.setText(String.format("%s %d",
+        monthYearTextview.setText(String.format(Locale.getDefault(), "%s %d",
                 mNoteDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()),
                 mNoteDate.get(Calendar.YEAR)));
 
     }
 
+    /**
+     *
+     */
     void setSelectedTime() {
-
+        timeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", mNoteDate.get(Calendar.HOUR_OF_DAY), mNoteDate.get(Calendar.MINUTE)));
     }
 }
