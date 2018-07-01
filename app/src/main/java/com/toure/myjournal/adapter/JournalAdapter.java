@@ -159,7 +159,8 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
 
         @Override
         public void onClick(View view) {
-            mClickHandler.onClick();
+            int position = getAdapterPosition();
+            mClickHandler.onClick(mNotes.get(position).getId());
         }
     }
 }

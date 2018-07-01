@@ -20,7 +20,7 @@ public interface NoteDao {
     List<Note> getAllNotes();
 
     @Query("SELECT * FROM note WHERE id = :noteId")
-    List<Note> getNoteWithId(int noteId);
+    Note getNoteWithId(int noteId);
 
     @Query("SELECT * FROM note WHERE id IN (:noteIds)")
     List<Note> getAllNotesWithIds(int[] noteIds);

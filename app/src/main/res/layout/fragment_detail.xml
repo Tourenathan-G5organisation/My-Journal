@@ -37,9 +37,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
-                    android:text="01"
                     android:textColor="@color/colorBlack"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    tools:text="01" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -52,16 +52,16 @@
                         android:id="@+id/calendar_week_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Monday"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:text="Monday" />
 
                     <TextView
                         android:id="@+id/calendar_month_and_year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="June 2018"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="June 2018" />
 
                 </LinearLayout>
 
@@ -70,10 +70,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="11:30"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="11:30" />
 
             </LinearLayout>
 
@@ -87,20 +87,20 @@
                     android:id="@+id/journal_item_title_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Diary title"
                     android:textColor="@color/colorPrimary"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Diary title" />
 
                 <TextView
                     android:id="@+id/journal_item_content_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Here goes my story of the day at this particular time of the day, which i had a tough task today in vey limeited time.\nI'm buiding a greate Ui for this blog to has the best design possible\n
-            Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor "
                     android:textColor="@color/colorBlack"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    tools:text="Here goes my story of the day at this particular time of the day, which i had a tough task today in vey limeited time.\nI'm buiding a greate Ui for this blog to has the best design possible\n
+            Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor Lorem ipsum delor " />
 
             </LinearLayout>
         </LinearLayout>

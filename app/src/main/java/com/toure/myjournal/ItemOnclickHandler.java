@@ -13,5 +13,5 @@ public interface ItemOnclickHandler {
     /**
      * OnClick method use to capture the click event
      */
-    void onClick();
+    void onClick(int itemId);
 }
