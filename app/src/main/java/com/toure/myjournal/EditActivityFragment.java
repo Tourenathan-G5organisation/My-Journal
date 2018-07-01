@@ -2,6 +2,7 @@ package com.toure.myjournal;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,12 @@ import java.util.Locale;
  * A placeholder fragment containing a simple view.
  */
 public class EditActivityFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+
+    public static final String ITEM_ID_KEY = "item_id_key";
+    private static final String LOG_TAC = EditActivityFragment.class.getSimpleName();
+    final int DEFAULT_ITEM_ID = -1;
+    int mItemId;
+    Note mNote;
 
     TextView timeTextView;
     TextView dayOfWeekTextview;
@@ -92,8 +99,27 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
             }
         });
 
-        setSelectedTime();
-        setSelectedDate();
+        Intent intent = getActivity().getIntent();
+        if (intent != null && intent.hasExtra(ITEM_ID_KEY)) {
+            mItemId = getActivity().getIntent().getIntExtra(ITEM_ID_KEY, DEFAULT_ITEM_ID);
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mNote = mDb.noteDao().getNoteWithId(mItemId);
+                    mNoteDate = mNote.getCalendar();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            initialiseView();
+                        }
+                    });
+                }
+            });
+        } else {
+            setSelectedTime();
+            setSelectedDate();
+        }
+
     }
 
     @Override
@@ -176,15 +202,45 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
         String content = noteContentEditText.getText().toString();
         RandomColor randomColor = new RandomColor();
         int color = randomColor.randomColor();
-        final Note note = new Note(title, content, mNoteDate.getTime(), color);
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDb.noteDao().insert(note);
-                getActivity().finish();
-            }
-        });
+        if (mNote != null) {
+            //Update
+            mNote.setNoteTitle(title);
+            mNote.setNoteContent(content);
+            mNote.setNoteTime(mNoteDate.getTime());
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDb.noteDao().update(mNote);
+                    getActivity().finish();
+                }
+            });
+        } else {
+            //Insert
+            mNote = new Note(title, content, mNoteDate.getTime(), color);
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDb.noteDao().insert(mNote);
+                    getActivity().finish();
+                }
+            });
+        }
 
+
+    }
+
+    /**
+     * Populate the various views with data
+     */
+    void initialiseView() {
+        timeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", mNoteDate.get(Calendar.HOUR_OF_DAY), mNoteDate.get(Calendar.MINUTE)));
+        dayOfWeekTextview.setText(mNoteDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()));
+        dayOfMonthTextview.setText(String.valueOf(mNoteDate.get(Calendar.DAY_OF_MONTH)));
+        monthYearTextview.setText(String.format(Locale.getDefault(), "%s %d",
+                mNoteDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()),
+                mNoteDate.get(Calendar.YEAR)));
+        noteTileEditText.setText(mNote.getNoteTitle());
+        noteContentEditText.setText(mNote.getNoteContent());
     }
 
 

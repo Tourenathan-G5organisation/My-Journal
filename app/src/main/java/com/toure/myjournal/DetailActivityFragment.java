@@ -2,6 +2,7 @@ package com.toure.myjournal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,8 +27,8 @@ public class DetailActivityFragment extends Fragment {
 
     public static final String ITEM_ID_KEY = "item_id_key";
     private static final String LOG_TAC = DetailActivityFragment.class.getSimpleName();
+    final int DEFAULT_ITEM_ID = -1;
     int mItemId;
-
     TextView timeTextView;
     TextView dayOfWeekTextview;
     TextView dayOfMonthTextview;
@@ -63,11 +64,27 @@ public class DetailActivityFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ITEM_ID_KEY, mItemId);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDb = AppDatabase.getsInstance(getActivity().getApplicationContext());
-        mItemId = getActivity().getIntent().getIntExtra(ITEM_ID_KEY, -1);
-        if (mItemId == -1) getActivity().finish();
+
+        Intent intent = getActivity().getIntent();
+        if (intent != null && intent.hasExtra(ITEM_ID_KEY)) {
+            mItemId = getActivity().getIntent().getIntExtra(ITEM_ID_KEY, DEFAULT_ITEM_ID);
+
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -81,7 +98,6 @@ public class DetailActivityFragment extends Fragment {
                 });
             }
         });
-
     }
 
     @Override
@@ -94,6 +110,7 @@ public class DetailActivityFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_edit) {
             Intent intent = new Intent(getActivity(), EditActivity.class);
+            intent.putExtra(EditActivityFragment.ITEM_ID_KEY, mNote.getId());
             startActivity(intent);
             return true;
         } else if (id == R.id.action_delete) {
