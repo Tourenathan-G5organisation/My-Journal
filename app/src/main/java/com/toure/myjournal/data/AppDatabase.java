@@ -11,7 +11,7 @@ import android.util.Log;
  * Created by Toure Nathan on 6/30/2018.
  */
 
-@Database(entities = {Note.class}, version = 1, exportSchema = false)
+@Database(entities = {Note.class}, version = 2, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 

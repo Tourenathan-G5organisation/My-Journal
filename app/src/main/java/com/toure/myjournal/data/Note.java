@@ -29,21 +29,25 @@ public class Note {
     @ColumnInfo(name = "note_time")
     private Date noteTime;
 
+    private int color;
+
     @Ignore
     private Calendar calendarTime;
 
-    public Note(int id, String noteTitle, String noteContent, Date noteTime) {
+    public Note(int id, String noteTitle, String noteContent, Date noteTime, int color) {
         this.id = id;
         this.noteContent = noteContent;
         this.noteTitle = noteTitle;
         this.noteTime = noteTime;
+        this.color = color;
     }
 
     @Ignore
-    public Note(String noteTitle, String noteContent, Date noteTime) {
+    public Note(String noteTitle, String noteContent, Date noteTime, int color) {
         this.noteContent = noteContent;
         this.noteTitle = noteTitle;
         this.noteTime = noteTime;
+        this.color = color;
     }
 
     @NonNull
@@ -77,6 +81,14 @@ public class Note {
 
     public void setNoteTime(Date noteTime) {
         this.noteTime = noteTime;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public Calendar getCalendar() {

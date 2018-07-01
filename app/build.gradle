@@ -39,5 +39,6 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
 
     compile "android.arch.persistence.room:rxjava2:$room_version"
+    compile 'com.github.lzyzsd.randomcolor:library:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

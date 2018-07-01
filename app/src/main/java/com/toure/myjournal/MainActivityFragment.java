@@ -92,8 +92,8 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
     public void onResume() {
         super.onResume();
         List<Note> notes = mDb.noteDao().getAllNotes();
-        if (notes.size() == 0) {
-            mNoNoteLinearlayout.setVisibility(View.VISIBLE);
+        if (notes.size() != 0) {
+            mNoNoteLinearlayout.setVisibility(View.GONE);
         }
         mJournalAdapter.setNotes(notes);
     }

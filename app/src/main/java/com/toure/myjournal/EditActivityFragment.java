@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.github.lzyzsd.randomcolor.RandomColor;
 import com.toure.myjournal.data.AppDatabase;
 import com.toure.myjournal.data.Note;
 
@@ -172,7 +173,9 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     void saveNote() {
         String title = noteTileEditText.getText().toString();
         String content = noteContentEditText.getText().toString();
-        Note note = new Note(title, content, mNoteDate.getTime());
+        RandomColor randomColor = new RandomColor();
+        int color = randomColor.randomColor();
+        Note note = new Note(title, content, mNoteDate.getTime(), color);
         mDb.noteDao().insert(note);
         getActivity().finish();
     }

@@ -107,6 +107,10 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
         holder.noteWeekDay.setText(note.getCalendar().getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
         holder.noteMonthDay.setText(String.format(Locale.getDefault(), "%02d", note.getCalendar().get(Calendar.DAY_OF_MONTH)));
         holder.noteTime.setText(String.format(Locale.getDefault(), "%02d:%02d", note.getCalendar().get(Calendar.HOUR_OF_DAY), note.getCalendar().get(Calendar.MINUTE)));
+        if (note.getColor() != 0) {
+            holder.noteColor.setBackgroundColor(note.getColor());
+        }
+
         if (holder.getItemViewType() == TYPE_JOURNAL_ITEM_WITH_HEADING) {
             holder.noteMonthYear.setText(String.format(Locale.getDefault(), "%s %d",
                     note.getCalendar().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()),
