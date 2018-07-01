@@ -2,6 +2,8 @@ package com.toure.myjournal;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,7 +36,7 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     private static final String LOG_TAC = EditActivityFragment.class.getSimpleName();
     final int DEFAULT_ITEM_ID = -1;
     int mItemId;
-    Note mNote;
+    LiveData<Note> mNote;
 
     TextView timeTextView;
     TextView dayOfWeekTextview;
@@ -102,19 +104,16 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
         Intent intent = getActivity().getIntent();
         if (intent != null && intent.hasExtra(ITEM_ID_KEY)) {
             mItemId = getActivity().getIntent().getIntExtra(ITEM_ID_KEY, DEFAULT_ITEM_ID);
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            mNote = mDb.noteDao().getNoteWithId(mItemId);
+            mNote.observe(this, new Observer<Note>() {
                 @Override
-                public void run() {
-                    mNote = mDb.noteDao().getNoteWithId(mItemId);
-                    mNoteDate = mNote.getCalendar();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            initialiseView();
-                        }
-                    });
+                public void onChanged(@Nullable Note note) {
+                    mNote.removeObserver(this);
+                    mNoteDate = note.getCalendar();
+                    initialiseView(note);
                 }
             });
+
         } else {
             setSelectedTime();
             setSelectedDate();
@@ -204,23 +203,23 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
         int color = randomColor.randomColor();
         if (mNote != null) {
             //Update
-            mNote.setNoteTitle(title);
-            mNote.setNoteContent(content);
-            mNote.setNoteTime(mNoteDate.getTime());
+            mNote.getValue().setNoteTitle(title);
+            mNote.getValue().setNoteContent(content);
+            mNote.getValue().setNoteTime(mNoteDate.getTime());
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    mDb.noteDao().update(mNote);
+                    mDb.noteDao().update(mNote.getValue());
                     getActivity().finish();
                 }
             });
         } else {
             //Insert
-            mNote = new Note(title, content, mNoteDate.getTime(), color);
+            final Note note = new Note(title, content, mNoteDate.getTime(), color);
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    mDb.noteDao().insert(mNote);
+                    mDb.noteDao().insert(note);
                     getActivity().finish();
                 }
             });
@@ -232,15 +231,15 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     /**
      * Populate the various views with data
      */
-    void initialiseView() {
+    void initialiseView(Note note) {
         timeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", mNoteDate.get(Calendar.HOUR_OF_DAY), mNoteDate.get(Calendar.MINUTE)));
         dayOfWeekTextview.setText(mNoteDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()));
         dayOfMonthTextview.setText(String.valueOf(mNoteDate.get(Calendar.DAY_OF_MONTH)));
         monthYearTextview.setText(String.format(Locale.getDefault(), "%s %d",
                 mNoteDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()),
                 mNoteDate.get(Calendar.YEAR)));
-        noteTileEditText.setText(mNote.getNoteTitle());
-        noteContentEditText.setText(mNote.getNoteContent());
+        noteTileEditText.setText(note.getNoteTitle());
+        noteContentEditText.setText(note.getNoteContent());
     }
 
 

@@ -1,10 +1,13 @@
 package com.toure.myjournal;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +42,7 @@ public class DetailActivityFragment extends Fragment {
 
     // App Database reference
     AppDatabase mDb;
-    Note mNote;
+    LiveData<Note> mNote;
 
     public DetailActivityFragment() {
     }
@@ -77,27 +80,21 @@ public class DetailActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         if (intent != null && intent.hasExtra(ITEM_ID_KEY)) {
             mItemId = getActivity().getIntent().getIntExtra(ITEM_ID_KEY, DEFAULT_ITEM_ID);
+            mNote = mDb.noteDao().getNoteWithId(mItemId);
+            mNote.observe(this, new Observer<Note>() {
+                @Override
+                public void onChanged(@Nullable Note note) {
+                    try {
+                        mNoteDate = note.getCalendar();
+                        initialiseView(note);
+                    } catch (NullPointerException e) {
+                        Log.d(LOG_TAC, e.getMessage());
+                    }
 
+                }
+            });
         }
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mNote = mDb.noteDao().getNoteWithId(mItemId);
-                mNoteDate = mNote.getCalendar();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initialiseView();
-                    }
-                });
-            }
-        });
     }
 
     @Override
@@ -110,14 +107,14 @@ public class DetailActivityFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_edit) {
             Intent intent = new Intent(getActivity(), EditActivity.class);
-            intent.putExtra(EditActivityFragment.ITEM_ID_KEY, mNote.getId());
+            intent.putExtra(EditActivityFragment.ITEM_ID_KEY, mNote.getValue().getId());
             startActivity(intent);
             return true;
         } else if (id == R.id.action_delete) {
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    mDb.noteDao().delete(mNote);
+                    mDb.noteDao().delete(mNote.getValue());
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -134,14 +131,14 @@ public class DetailActivityFragment extends Fragment {
     /**
      * Populate the various views with data
      */
-    void initialiseView() {
+    void initialiseView(Note note) {
         timeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", mNoteDate.get(Calendar.HOUR_OF_DAY), mNoteDate.get(Calendar.MINUTE)));
         dayOfWeekTextview.setText(mNoteDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()));
         dayOfMonthTextview.setText(String.valueOf(mNoteDate.get(Calendar.DAY_OF_MONTH)));
         monthYearTextview.setText(String.format(Locale.getDefault(), "%s %d",
                 mNoteDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()),
                 mNoteDate.get(Calendar.YEAR)));
-        noteTileTextviTextView.setText(mNote.getNoteTitle());
-        noteContentTextView.setText(mNote.getNoteContent());
+        noteTileTextviTextView.setText(note.getNoteTitle());
+        noteContentTextView.setText(note.getNoteContent());
     }
 }

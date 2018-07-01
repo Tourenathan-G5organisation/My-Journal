@@ -1,5 +1,6 @@
 package com.toure.myjournal.data;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -17,13 +18,13 @@ import java.util.List;
 public interface NoteDao {
 
     @Query("SELECT * FROM note ORDER BY note_time DESC")
-    List<Note> getAllNotes();
+    LiveData<List<Note>> getAllNotes();
 
     @Query("SELECT * FROM note WHERE id = :noteId")
-    Note getNoteWithId(int noteId);
+    LiveData<Note> getNoteWithId(int noteId);
 
     @Query("SELECT * FROM note WHERE id IN (:noteIds)")
-    List<Note> getAllNotesWithIds(int[] noteIds);
+    LiveData<List<Note>> getAllNotesWithIds(int[] noteIds);
 
     @Insert
     void insertAll(List<Note> notes);

@@ -1,6 +1,8 @@
 package com.toure.myjournal;
 
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +18,6 @@ import android.widget.LinearLayout;
 
 import com.toure.myjournal.adapter.JournalAdapter;
 import com.toure.myjournal.data.AppDatabase;
-import com.toure.myjournal.data.AppExecutors;
 import com.toure.myjournal.data.Note;
 
 import java.util.List;
@@ -70,6 +71,18 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        final LiveData<List<Note>> notes = mDb.noteDao().getAllNotes();
+        notes.observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(@Nullable List<Note> notes) {
+                if (notes.size() != 0) {
+                    mNoNoteLinearlayout.setVisibility(View.GONE);
+                }
+                mJournalAdapter.setNotes(notes);
+            }
+        });
+
         mRecyclerView.setLayoutManager(mLayoutManager);
         DividerItemDecoration divider = new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
         mRecyclerView.addItemDecoration(divider);
@@ -88,28 +101,5 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
         Intent intentToStartDetailActivity = new Intent(context, DetailActivity.class);
         intentToStartDetailActivity.putExtra(DetailActivityFragment.ITEM_ID_KEY, itemId);
         startActivity(intentToStartDetailActivity);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                final List<Note> notes = mDb.noteDao().getAllNotes();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (notes.size() != 0) {
-                            mNoNoteLinearlayout.setVisibility(View.GONE);
-                        }
-                        mJournalAdapter.setNotes(notes);
-                    }
-                });
-
-            }
-        });
-
-
     }
 }
