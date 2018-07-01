@@ -12,9 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.toure.myjournal.adapter.JournalAdapter;
 import com.toure.myjournal.data.AppDatabase;
+import com.toure.myjournal.data.Note;
+
+import java.util.List;
 
 
 /**
@@ -28,6 +32,7 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
     RecyclerView mRecyclerView;
     JournalAdapter mJournalAdapter;
     RecyclerView.LayoutManager mLayoutManager;
+    LinearLayout mNoNoteLinearlayout;
 
     // App Database reference
     AppDatabase mDb;
@@ -48,7 +53,7 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
+        mNoNoteLinearlayout = view.findViewById(R.id.no_note_message_linearlayout);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.journal_recyclerview);
         int recyclerViewOrientation = LinearLayoutManager.VERTICAL;
 
@@ -81,5 +86,15 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
         Context context = getContext();
         Intent intentToStartDetailActivity = new Intent(context, DetailActivity.class);
         startActivity(intentToStartDetailActivity);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        List<Note> notes = mDb.noteDao().getAllNotes();
+        if (notes.size() == 0) {
+            mNoNoteLinearlayout.setVisibility(View.VISIBLE);
+        }
+        mJournalAdapter.setNotes(notes);
     }
 }

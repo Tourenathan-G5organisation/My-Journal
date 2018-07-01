@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -27,6 +28,9 @@ public class Note {
 
     @ColumnInfo(name = "note_time")
     private Date noteTime;
+
+    @Ignore
+    private Calendar calendarTime;
 
     public Note(int id, String noteTitle, String noteContent, Date noteTime) {
         this.id = id;
@@ -73,6 +77,14 @@ public class Note {
 
     public void setNoteTime(Date noteTime) {
         this.noteTime = noteTime;
+    }
+
+    public Calendar getCalendar() {
+        if (calendarTime == null) {
+            calendarTime = Calendar.getInstance();
+        }
+        calendarTime.setTime(this.noteTime);
+        return calendarTime;
     }
 
 }

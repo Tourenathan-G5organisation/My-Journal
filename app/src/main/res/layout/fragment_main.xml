@@ -1,19 +1,45 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorDaybackground"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     tools:context="com.toure.myjournal.MainActivityFragment"
-    tools:showIn="@layout/activity_main"
-    android:background="@color/colorDaybackground">
+    tools:showIn="@layout/activity_main">
+
+
+    <LinearLayout
+        android:id="@+id/no_note_message_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/logoimage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_half_margin"
+            android:text="@string/immotalise"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/journal_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/journal_recyclerview">
+        android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
 
-</RelativeLayout>
+</FrameLayout>

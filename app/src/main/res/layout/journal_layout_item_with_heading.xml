@@ -1,101 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/journal_item_month_year"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="June, 2018"
+        android:background="@color/colorDaybackground"
         android:gravity="center_horizontal|start"
-        android:textStyle="normal"
-        android:textSize="22sp"
+        android:paddingBottom="8dp"
         android:paddingLeft="50dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:background="@color/colorDaybackground"
-        android:id="@+id/journal_item_month_year" />
+        android:textSize="22sp"
+        android:textStyle="normal"
+        tools:text="June, 2018" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/journal_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="5dp"
         android:background="@color/colorWhite"
-        android:id="@+id/journal_item_layout">
+        android:elevation="5dp"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/color_textview"
             android:layout_width="5dp"
             android:layout_height="match_parent"
-            android:background="@color/colorAccent"
-            android:layout_marginRight="5dp" />
+            android:layout_marginRight="5dp"
+            android:background="@color/colorAccent" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center|center_vertical"
-            android:layout_marginRight="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/calendar_week_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mon"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="Mon" />
 
             <TextView
+                android:id="@+id/calendar_month_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="01"
+                android:textColor="@color/colorBlack"
                 android:textSize="19sp"
-                android:textColor="@color/colorBlack" />
+                tools:text="01" />
 
             <TextView
+                android:id="@+id/time_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="11:30"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="11:30" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1"
+            android:layout_marginBottom="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/note_title_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Diary title"
+                android:textColor="@color/colorPrimary"
                 android:textSize="22sp"
-                android:textColor="@color/colorPrimary" />
+                tools:text="Diary title" />
 
             <TextView
+                android:id="@+id/note_content_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Here is where the write up goes in. The text will goes in here and we will finish with 3 dots.
-             Here is a new line that we want to start that may"
                 android:ellipsize="end"
+                android:maxLines="3"
                 android:textSize="18sp"
-                android:maxLines="3" />
+                tools:text="Here is where the write up goes in. The text will goes in here and we will finish with 3 dots.
+             Here is a new line that we want to start that may" />
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:background="@color/colorAccent"
-            android:layout_gravity="center|end"
-            android:src="@drawable/ginger1"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY" />
+        <!--  <ImageView
+              android:layout_width="60dp"
+              android:layout_height="50dp"
+              android:background="@color/colorAccent"
+              android:layout_gravity="center|end"
+              android:src="@drawable/ginger1"
+              android:adjustViewBounds="true"
+              android:scaleType="fitXY" />-->
 
 
     </LinearLayout>
