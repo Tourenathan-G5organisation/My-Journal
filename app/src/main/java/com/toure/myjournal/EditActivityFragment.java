@@ -11,8 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.toure.myjournal.data.AppDatabase;
+import com.toure.myjournal.data.Note;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +32,11 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     TextView dayOfMonthTextview;
     TextView monthYearTextview;
     Calendar mNoteDate;
+    EditText noteTileEditText;
+    EditText noteContentEditText;
+
+    // App Database reference
+    AppDatabase mDb;
 
     public EditActivityFragment() {
         mNoteDate = Calendar.getInstance();
@@ -41,6 +50,8 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
         dayOfWeekTextview = view.findViewById(R.id.calendar_week_day);
         dayOfMonthTextview = view.findViewById(R.id.calendar_month_day);
         monthYearTextview = view.findViewById(R.id.calendar_month_and_year);
+        noteTileEditText = view.findViewById(R.id.input_title);
+        noteContentEditText = view.findViewById(R.id.input_content);
         return view;
     }
 
@@ -53,6 +64,7 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mDb = AppDatabase.getsInstance(getActivity().getApplicationContext());
         dayOfWeekTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,11 +97,18 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_done) getActivity().finish();
-        else if (id == R.id.action_delete) {
+        switch (id) {
+            case R.id.action_done:
+            case android.R.id.home:
+                saveNote();
+                return true;
+            case R.id.action_delete:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -146,4 +165,17 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     void setSelectedTime() {
         timeTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", mNoteDate.get(Calendar.HOUR_OF_DAY), mNoteDate.get(Calendar.MINUTE)));
     }
+
+    /**
+     * Save the new note entered by the user
+     */
+    void saveNote() {
+        String title = noteTileEditText.getText().toString();
+        String content = noteContentEditText.getText().toString();
+        Note note = new Note(title, content, mNoteDate.getTime());
+        mDb.noteDao().insert(note);
+        getActivity().finish();
+    }
+
+
 }

@@ -32,4 +32,11 @@ public class EditActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_edit, menu);
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        EditActivityFragment fragment = (EditActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        fragment.saveNote();
+        super.onBackPressed();
+    }
 }

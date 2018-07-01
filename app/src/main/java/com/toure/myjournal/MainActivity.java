@@ -23,7 +23,8 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String LOG_TAC = MainActivity.class.getSimpleName();
+    private static final String LOG_TAC = MainActivity.class.getSimpleName();
+
     private static final int RC_SIGN_IN = 1459;
     // Firebase instance variable
     private FirebaseAuth mFirebaseAuth;
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.toure.myjournal.adapter.JournalAdapter;
+import com.toure.myjournal.data.AppDatabase;
 
 
 /**
@@ -22,11 +23,14 @@ import com.toure.myjournal.adapter.JournalAdapter;
  */
 public class MainActivityFragment extends Fragment implements ItemOnclickHandler {
 
-    public static final String LOG_TAC = MainActivityFragment.class.getSimpleName();
+    private static final String LOG_TAC = MainActivityFragment.class.getSimpleName();
 
     RecyclerView mRecyclerView;
     JournalAdapter mJournalAdapter;
     RecyclerView.LayoutManager mLayoutManager;
+
+    // App Database reference
+    AppDatabase mDb;
 
     public MainActivityFragment() {
         // Required empty public constructor
@@ -35,6 +39,7 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDb = AppDatabase.getsInstance(getActivity().getApplicationContext());
         mJournalAdapter = new JournalAdapter(getContext(), this);
     }
 
