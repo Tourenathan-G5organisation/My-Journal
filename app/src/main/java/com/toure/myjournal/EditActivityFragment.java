@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.github.lzyzsd.randomcolor.RandomColor;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.toure.myjournal.data.AppDatabase;
 import com.toure.myjournal.data.AppExecutors;
 import com.toure.myjournal.data.Note;
@@ -49,6 +52,12 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     // App Database reference
     AppDatabase mDb;
 
+    //Firebase Auth
+    private FirebaseAuth mFirebaseAuth;
+    //Firebase Database
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mUserNotesReference;
+
     public EditActivityFragment() {
         mNoteDate = Calendar.getInstance();
     }
@@ -76,6 +85,10 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDb = AppDatabase.getsInstance(getActivity().getApplicationContext());
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserNotesReference = mFirebaseDatabase.getReference().child(mFirebaseAuth.getCurrentUser().getUid());
+
         dayOfWeekTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,8 +232,16 @@ public class EditActivityFragment extends Fragment implements DatePickerDialog.O
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    mDb.noteDao().insert(note);
-                    getActivity().finish();
+                    final long id = mDb.noteDao().insert(note);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            note.setId((int) id);
+                            mUserNotesReference.push().setValue(note);
+                            getActivity().finish();
+                        }
+                    });
+
                 }
             });
         }

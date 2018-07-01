@@ -29,8 +29,8 @@ public interface NoteDao {
     @Insert
     void insertAll(List<Note> notes);
 
-    @Insert
-    void insert(Note note);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insert(Note note);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Note note);
