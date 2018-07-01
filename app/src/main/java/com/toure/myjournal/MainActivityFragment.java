@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.toure.myjournal.adapter.JournalAdapter;
 import com.toure.myjournal.data.AppDatabase;
+import com.toure.myjournal.data.AppExecutors;
 import com.toure.myjournal.data.Note;
 
 import java.util.List;
@@ -91,10 +92,23 @@ public class MainActivityFragment extends Fragment implements ItemOnclickHandler
     @Override
     public void onResume() {
         super.onResume();
-        List<Note> notes = mDb.noteDao().getAllNotes();
-        if (notes.size() != 0) {
-            mNoNoteLinearlayout.setVisibility(View.GONE);
-        }
-        mJournalAdapter.setNotes(notes);
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<Note> notes = mDb.noteDao().getAllNotes();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (notes.size() != 0) {
+                            mNoNoteLinearlayout.setVisibility(View.GONE);
+                        }
+                        mJournalAdapter.setNotes(notes);
+                    }
+                });
+
+            }
+        });
+
+
     }
 }
